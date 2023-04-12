@@ -274,6 +274,13 @@ export default function ProTableComp() {
     setIsAddModalOpen(false)
   }
 
+  const validateDueDate = (rule, value)=>{
+    console.log(rule, value)
+    if(value && value < moment()){
+      return Promise.reject('Due date cannot be before the current time')
+    }
+    return Promise.resolve()
+  }
 
 
 
@@ -302,7 +309,7 @@ export default function ProTableComp() {
         onCancel={handleAddCancel}
         okText="Submit"
       >
-        <Form form={form} onFinish={handleAddSubmit}>
+        <Form form={form} onFinish={handleAddSubmit} initialValues={{status:'OPEN'}}>
           <Form.Item name={"timestamp"} initialValue={moment()} hidden />
           <Form.Item name={"title"} label="Title" rules={[{ required: true, max: 100 }]}>
             <Input />
@@ -310,15 +317,15 @@ export default function ProTableComp() {
           <Form.Item name="description" label="Description" rules={[{ required: true, max: 100 }]}>
             <Input.TextArea />
           </Form.Item>
-          <Form.Item name="dueDate" label="Due Date" rules={[{ required: false }]}>
+          <Form.Item name="dueDate" label="Due Date" rules={[{ required: false },{validator:validateDueDate}]}>
             <DatePicker />
           </Form.Item>
           <Form.Item name="tags" label="Tags">
             <Select mode="multiple" options={tagOptions} />
           </Form.Item>
           <Form.Item name="status" label="Status" rules={[{ required: true }]}>
-            <Select defaultValue={'OPEN'}>
-              <Select.Option value="OPEN">Open</Select.Option>
+            <Select defaultValue='OPEN'>
+              <Select.Option  value="OPEN">Open</Select.Option>
               <Select.Option value="WORKING">Working</Select.Option>
               <Select.Option value="DONE">Done</Select.Option>
               <Select.Option value="OVERDUE">OVerdue</Select.Option>
