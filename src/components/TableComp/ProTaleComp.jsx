@@ -30,7 +30,7 @@ export default function ProTableComp() {
       description: 'Have to finish the assignment from Algo Bulls before Apr 13',
       dueDate: 1649975400000,
       tags: ['HTML', 'CSS', 'REACT'],
-      status: 'completed',
+      status: 'DONE',
     },
     {
       key: '2',
@@ -39,7 +39,7 @@ export default function ProTableComp() {
       description: 'Create a landing page for a new product launch',
       dueDate: 1650241200000,
       tags: ['HTML', 'CSS'],
-      status: 'in progress',
+      status: 'WORKING',
     },
     {
       key: '3',
@@ -48,7 +48,7 @@ export default function ProTableComp() {
       description: 'Update the content of the website based on the new product launch',
       dueDate: 1650493200000,
       tags: ['HTML', 'CSS'],
-      status: 'not completed',
+      status: 'OVERDUE',
     },
     {
       key: '4',
@@ -57,7 +57,7 @@ export default function ProTableComp() {
       description: 'Design and develop the dashboard UI for a new project',
       dueDate: 1650484200000,
       tags: ['REACT'],
-      status: 'in progress',
+      status: 'WORKING',
     },
     {
       key: '5',
@@ -66,7 +66,7 @@ export default function ProTableComp() {
       description: 'Develop a payment gateway for the e-commerce website',
       dueDate: 1650670800000,
       tags: ['REACT', 'HTML'],
-      status: 'not completed',
+      status: 'WORKING',
     },
     {
       key: '6',
@@ -75,7 +75,7 @@ export default function ProTableComp() {
       description: 'Create a user-friendly UI for a mobile app',
       dueDate: 1650709200000,
       tags: ['REACT', 'CSS'],
-      status: 'in progress',
+      status: 'WORKING',
     },
     {
       key: '7',
@@ -84,7 +84,7 @@ export default function ProTableComp() {
       description: 'Build an e-commerce website with React and Redux',
       dueDate: 1650565200000,
       tags: ['REACT', 'HTML', 'CSS'],
-      status: 'not completed',
+      status: 'WORKING',
     },
     {
       key: '8',
@@ -93,7 +93,7 @@ export default function ProTableComp() {
       description: 'Write a blog post on the latest web development trends',
       dueDate: 1650670800000,
       tags: ['HTML', 'CSS'],
-      status: 'completed',
+      status: 'DONE',
     },
     {
       key: '9',
@@ -102,7 +102,7 @@ export default function ProTableComp() {
       description: 'Refactor the code to improve performance',
       dueDate: 1650493200000,
       tags: ['REACT'],
-      status: 'in progress',
+      status: 'WORKING',
     },
     {
       key: '10',
@@ -111,7 +111,7 @@ export default function ProTableComp() {
       description: 'Add animation effects to the website',
       dueDate: 1650752400000,
       tags: ['CSS'],
-      status: 'not completed',
+      status: 'OVERDUE',
     },
     {
       key: '11',
@@ -120,7 +120,7 @@ export default function ProTableComp() {
       description: 'Test the website for bugs and errors',
       dueDate: 1650835200000,
       tags: ['HTML'],
-      status: 'not completed',
+      status: 'OVERDUE',
     },
     {
       key: '12',
@@ -129,7 +129,7 @@ export default function ProTableComp() {
       description: 'Design a new logo for the company',
       dueDate: 1650421200000,
       tags: ['CSS'],
-      status: 'completed',
+      status: 'DONE',
     },
     {
       key: '13',
@@ -138,7 +138,7 @@ export default function ProTableComp() {
       description: 'Create an infographic to showcase the company stats',
       dueDate: 1650622800000,
       tags: ['HTML'],
-      status: 'in progress',
+      status: 'OPEN',
     },
     {
       key: '14',
@@ -147,7 +147,7 @@ export default function ProTableComp() {
       description: 'Optimize the website for search engines',
       dueDate: 1650670800000,
       tags: ['HTML', 'CSS'],
-      status: 'not completed',
+      status: 'OVERDUE',
     },
     {
       key: '15',
@@ -156,7 +156,7 @@ export default function ProTableComp() {
       description: 'Create a newsletter to send to the subscribers',
       dueDate: 1650705600000,
       tags: ['HTML', 'CSS'],
-      status: 'in progress',
+      status: 'WORKING',
     },
   ])
 
@@ -186,7 +186,12 @@ export default function ProTableComp() {
       dataIndex: 'dueDate',
       key: 'dueDate',
       valueType: 'dateTime',
-      render: (text, record) => moment(record.timeStamp).format('YYYY-MM-DD HH:mm:ss')
+      render: (text, record) => {
+        if(!record.dueDate){
+          return '-'
+        }
+        return moment(record.dueDate).format('YYYY-MM-DD')
+      }
     },
     {
       title: 'Tags',
@@ -225,13 +230,13 @@ export default function ProTableComp() {
       render: status => {
         let color;
         switch (status) {
-          case 'completed':
+          case 'DONE':
             color = 'green';
             break;
-          case 'in Progress':
+          case 'WORKING':
             color = 'orange';
             break;
-          case 'not Completed':
+          case 'OVERDUE':
             color = 'red';
             break;
           default:
@@ -312,10 +317,12 @@ export default function ProTableComp() {
             <Select mode="multiple" options={tagOptions} />
           </Form.Item>
           <Form.Item name="status" label="Status" rules={[{ required: true }]}>
-            <Select>
-              <Select.Option value="not completed">To Do</Select.Option>
-              <Select.Option value="in progress">In Progress</Select.Option>
-              <Select.Option value="completed">Done</Select.Option>
+            <Select defaultValue={'OPEN'}>
+              <Select.Option value="OPEN">Open</Select.Option>
+              <Select.Option value="WORKING">Working</Select.Option>
+              <Select.Option value="DONE">Done</Select.Option>
+              <Select.Option value="OVERDUE">OVerdue</Select.Option>
+
             </Select>
           </Form.Item>
         </Form>
