@@ -63,38 +63,7 @@ const HomePage = () => {
 
         <Content style={contentStyle}>
 
-
-          <div className="contentTop">
-
-            <div className="contentTopLeft">
-              <Input
-                placeholder='Search tasks'
-                style={{ width: "265px", height: "35px" }}
-              />
-              <Button
-                style={{
-                  borderRadius: "5px",
-                  width: "160px",
-                  height: "40px",
-                  fontSize: "15px"
-                }}
-                icon={<SearchOutlined />}
-                type='primary' >Search</Button>
-            </div>
-
-            <div className="contentTopRight">
-                <Button
-                type='primary'
-                icon={<PlusOutlined />}
-                >Add task</Button>
-            </div>
-
-          </div>
-
-          <Divider />
-
-
-
+    
           <div className="contentBottom">
             <ProTableComp />
           </div>

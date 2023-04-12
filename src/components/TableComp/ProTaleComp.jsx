@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import "../TableComp/ProTableComp.css"
-import { ConfigProvider, Tag } from 'antd';
+import { ConfigProvider, Tag, Button, Input } from 'antd';
 import enUS from 'antd/es/locale/en_US';
 import { ProTable } from '@ant-design/pro-table';
 import moment from 'moment/moment';
+import ToolBarComp from './ToolBarComp';
 
 
 export default function ProTableComp() {
@@ -177,27 +178,27 @@ export default function ProTableComp() {
       title: 'Tags',
       dataIndex: 'tags',
       key: 'tags',
-      render:(tags)=>(
+      render: (tags) => (
         <>
-          {tags.map((tag)=>{
-             let color = 'blue';
-             if (tag === 'REACT') {
-               color = 'green';
-             } else if (tag === 'HTML') {
-               color = 'red';
-             }
-              return <Tag key={tag} color={color}>
-                {tag}
-              </Tag>
-    })}
+          {tags.map((tag) => {
+            let color = 'blue';
+            if (tag === 'REACT') {
+              color = 'green';
+            } else if (tag === 'HTML') {
+              color = 'red';
+            }
+            return <Tag key={tag} color={color}>
+              {tag}
+            </Tag>
+          })}
         </>
       )
-    }, 
+    },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render:status=>{
+      render: status => {
         let color;
         switch (status) {
           case 'completed':
@@ -212,7 +213,7 @@ export default function ProTableComp() {
           default:
             color = 'blue';
         }
-        return(
+        return (
           <Tag color={color} key={status}>
             {status.toUpperCase()}
           </Tag>
@@ -227,23 +228,18 @@ export default function ProTableComp() {
 
   return (
     <ConfigProvider locale={enUS}>
+
       <ProTable
         style={{
 
           width: "100%"
         }}
-
         className='proTable'
         columns={columns}
         dataSource={data}
         pagination={{ pageSize: 6 }}
         search={false}
-      // dateFormatter="string"
-      // headerTitle="ProTable"
-      // rowKey="key"
-      // toolBarRender={() => [
-      //   <div>Custom Toolbar</div>,
-      // ]}
+        toolBarRender={() => <ToolBarComp />}
       />
     </ConfigProvider>
   );
