@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import "../TableComp/ProTableComp.css"
-import { ConfigProvider, Tag, Button, Input, Modal, Form, DatePicker, Select } from 'antd';
+import { ConfigProvider, Tag, Button, Input, Modal, Form, DatePicker, Popconfirm , Select } from 'antd';
 import enUS from 'antd/es/locale/en_US';
-import { ProTable } from '@ant-design/pro-table';
+import { ProTable} from '@ant-design/pro-table';
 import moment from 'moment/moment';
 import ToolBarComp from './ToolBarComp';
 
@@ -24,7 +24,7 @@ export default function ProTableComp() {
 
   const [data, setData] = useState([
     {
-      key: '1',
+      id: '1',
       timeStamp: 1649975400000,
       title: 'Finish Assignment',
       description: 'Have to finish the assignment from Algo Bulls before Apr 13',
@@ -33,7 +33,7 @@ export default function ProTableComp() {
       status: 'DONE',
     },
     {
-      key: '2',
+      id: '2',
       timeStamp: 1649899000000,
       title: 'Build Landing Page',
       description: 'Create a landing page for a new product launch',
@@ -42,7 +42,7 @@ export default function ProTableComp() {
       status: 'WORKING',
     },
     {
-      key: '3',
+      id: '3',
       timeStamp: 1650104400000,
       title: 'Update Website Content',
       description: 'Update the content of the website based on the new product launch',
@@ -51,7 +51,7 @@ export default function ProTableComp() {
       status: 'OVERDUE',
     },
     {
-      key: '4',
+      id: '4',
       timeStamp: 1650180840000,
       title: 'Create Dashboard UI',
       description: 'Design and develop the dashboard UI for a new project',
@@ -60,7 +60,7 @@ export default function ProTableComp() {
       status: 'WORKING',
     },
     {
-      key: '5',
+      id: '5',
       timeStamp: 1650360840000,
       title: 'Build Payment Gateway',
       description: 'Develop a payment gateway for the e-commerce website',
@@ -69,7 +69,7 @@ export default function ProTableComp() {
       status: 'WORKING',
     },
     {
-      key: '6',
+      id: '6',
       timeStamp: 1650259200000,
       title: 'Design Mobile App UI',
       description: 'Create a user-friendly UI for a mobile app',
@@ -78,7 +78,7 @@ export default function ProTableComp() {
       status: 'WORKING',
     },
     {
-      key: '7',
+      id: '7',
       timeStamp: 1650130800000,
       title: 'Develop E-commerce Website',
       description: 'Build an e-commerce website with React and Redux',
@@ -87,7 +87,7 @@ export default function ProTableComp() {
       status: 'WORKING',
     },
     {
-      key: '8',
+      id: '8',
       timeStamp: 1650399600000,
       title: 'Write Technical Blog',
       description: 'Write a blog post on the latest web development trends',
@@ -96,7 +96,7 @@ export default function ProTableComp() {
       status: 'DONE',
     },
     {
-      key: '9',
+      id: '9',
       timeStamp: 1650230400000,
       title: 'Code Refactoring',
       description: 'Refactor the code to improve performance',
@@ -105,7 +105,7 @@ export default function ProTableComp() {
       status: 'WORKING',
     },
     {
-      key: '10',
+      id: '10',
       timeStamp: 1650421200000,
       title: 'Create Animation',
       description: 'Add animation effects to the website',
@@ -114,7 +114,7 @@ export default function ProTableComp() {
       status: 'OVERDUE',
     },
     {
-      key: '11',
+      id: '11',
       timeStamp: 1650541200000,
       title: 'Test Website',
       description: 'Test the website for bugs and errors',
@@ -123,7 +123,7 @@ export default function ProTableComp() {
       status: 'OVERDUE',
     },
     {
-      key: '12',
+      id: '12',
       timeStamp: 1650210000000,
       title: 'Design Logo',
       description: 'Design a new logo for the company',
@@ -132,7 +132,7 @@ export default function ProTableComp() {
       status: 'DONE',
     },
     {
-      key: '13',
+      id: '13',
       timeStamp: 1650315600000,
       title: 'Create Infographic',
       description: 'Create an infographic to showcase the company stats',
@@ -141,7 +141,7 @@ export default function ProTableComp() {
       status: 'OPEN',
     },
     {
-      key: '14',
+      id: '14',
       timeStamp: 1650456000000,
       title: 'Implement SEO',
       description: 'Optimize the website for search engines',
@@ -150,7 +150,7 @@ export default function ProTableComp() {
       status: 'OVERDUE',
     },
     {
-      key: '15',
+      id: '15',
       timeStamp: 1650315600000,
       title: 'Create Newsletter',
       description: 'Create a newsletter to send to the subscribers',
@@ -162,6 +162,13 @@ export default function ProTableComp() {
 
 
   const columns = [
+    {
+      title:'Task ID',
+      dataIndex:"id",
+      hideInTable:true,
+      hideInSearch:true,
+      hideInForm:true
+    },
     {
       title: 'Time Stamp',
       dataIndex: 'timeStamp',
@@ -250,6 +257,19 @@ export default function ProTableComp() {
 
       }
     },
+    {
+      title:'Action',
+      dataIndex:'action',
+      valueType:'option',
+      render:(_,record)=>(
+        <Popconfirm
+        title="Are you sure to delete this task ?"
+        onConfirm={()=>handleDelete(record.id)}
+        >
+          <a>Delete</a>
+        </Popconfirm>
+      )
+    }
   ];
 
 
@@ -258,7 +278,7 @@ export default function ProTableComp() {
     form.validateFields()
       .then((validatedValues) => {
         const newData = {
-          key: data.length + 1,
+          id: Date.now().toString(36) + Math.random().toString(36).substring(2, 7),
           ...values,
         }
         setData([...data, newData])
@@ -280,6 +300,12 @@ export default function ProTableComp() {
       return Promise.reject('Due date cannot be before the current time')
     }
     return Promise.resolve()
+  }
+
+  const handleDelete = (id)=>{
+    setData((prevData)=>(
+      prevData.filter((item)=>item.id !== id)
+    ))
   }
 
   // const renderTagOption = (options) => {
