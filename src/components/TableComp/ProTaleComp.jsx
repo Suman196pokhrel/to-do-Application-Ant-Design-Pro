@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "../TableComp/ProTableComp.css"
-import { ConfigProvider, Tag, Button, Input } from 'antd';
+import { ConfigProvider, Tag, Button, Input, Modal, Form, DatePicker, Select } from 'antd';
 import enUS from 'antd/es/locale/en_US';
 import { ProTable } from '@ant-design/pro-table';
 import moment from 'moment/moment';
@@ -8,6 +8,19 @@ import ToolBarComp from './ToolBarComp';
 
 
 export default function ProTableComp() {
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [form] = Form.useForm()
+  const tagOptions = [
+    { label: "HTML", value: "HTML" },
+    { label: "REACT", value: "REACT" },
+    { label: "CSS", value: "CSS" },
+    { label: "IMPORTANT", value: "IMPORTANT" },
+    { label: "LOW PRIORITY", value: "LOW PRIORITY" }
+  ]
+
+
+
 
   const [data, setData] = useState([
     {
@@ -147,6 +160,7 @@ export default function ProTableComp() {
     },
   ])
 
+
   const columns = [
     {
       title: 'Time Stamp',
@@ -178,9 +192,16 @@ export default function ProTableComp() {
       title: 'Tags',
       dataIndex: 'tags',
       key: 'tags',
-      render: (tags) => (
-        <>
-          {tags.map((tag) => {
+      render: (tags) => {
+        if (!Array.isArray(tags)) {
+          return '-'
+        }
+        if (tags.length === 0) {
+          return '-'
+        }
+
+        return <>
+          {tags && tags.map((tag) => {
             let color = 'blue';
             if (tag === 'REACT') {
               color = 'green';
@@ -192,7 +213,10 @@ export default function ProTableComp() {
             </Tag>
           })}
         </>
-      )
+
+
+
+      }
     },
     {
       title: 'Status',
@@ -224,6 +248,30 @@ export default function ProTableComp() {
   ];
 
 
+  const handleAddSubmit = (values) => {
+
+    form.validateFields()
+      .then((validatedValues) => {
+        const newData = {
+          key: data.length + 1,
+          ...values,
+        }
+        setData([...data, newData])
+        form.resetFields()
+        setIsAddModalOpen(false)
+      })
+
+
+  }
+
+  const handleAddCancel = () => {
+    form.resetFields()
+    setIsAddModalOpen(false)
+  }
+
+
+
+
 
 
   return (
@@ -239,8 +287,39 @@ export default function ProTableComp() {
         dataSource={data}
         pagination={{ pageSize: 6 }}
         search={false}
-        toolBarRender={() => <ToolBarComp />}
+        toolBarRender={() => <ToolBarComp setIsAddModalOpen={setIsAddModalOpen} />}
       />
+
+      <Modal
+        title="Add Task"
+        open={isAddModalOpen}
+        onOk={() => handleAddSubmit(form.getFieldsValue())}
+        onCancel={handleAddCancel}
+        okText="Submit"
+      >
+        <Form form={form} onFinish={handleAddSubmit}>
+          <Form.Item name={"timestamp"} initialValue={moment()} hidden />
+          <Form.Item name={"title"} label="Title" rules={[{ required: true, max: 100 }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="description" label="Description" rules={[{ required: true, max: 100 }]}>
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item name="dueDate" label="Due Date" rules={[{ required: false }]}>
+            <DatePicker />
+          </Form.Item>
+          <Form.Item name="tags" label="Tags">
+            <Select mode="multiple" options={tagOptions} />
+          </Form.Item>
+          <Form.Item name="status" label="Status" rules={[{ required: true }]}>
+            <Select>
+              <Select.Option value="not completed">To Do</Select.Option>
+              <Select.Option value="in progress">In Progress</Select.Option>
+              <Select.Option value="completed">Done</Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
     </ConfigProvider>
   );
 }

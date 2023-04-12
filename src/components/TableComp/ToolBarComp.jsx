@@ -5,7 +5,16 @@ import { ConfigProvider, Tag, Button, Input } from 'antd';
 
 
 
-const ToolBarComp = () => {
+const ToolBarComp = ({setIsAddModalOpen}) => {
+
+  const handleAddClick=()=>{
+    setIsAddModalOpen(true)
+  }
+
+
+
+
+
   return (
     <div className='toolBar'>
             <div className="searchBar">
@@ -24,7 +33,9 @@ const ToolBarComp = () => {
             icon={<SearchOutlined />}
             type='primary' >Search</Button>
             </div>
+            
             <Button
+            onClick={()=>handleAddClick()}
             type='primary'
             icon={<PlusOutlined />}
           >Add task</Button>
