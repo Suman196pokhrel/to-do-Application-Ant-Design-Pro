@@ -1,0 +1,37 @@
+.bannerLeft{
+    height: 100vh;
+    /* background-color: black; */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+    justify-content:center ;
+    top: -100px;
+}
+
+.bannerLeftTop >img{
+    position: relative;
+    top: 30px;
+}
+
+.bannerLeftBottom{
+    margin-top: 10px;
+}
+
+.headTitle{
+    position: relative;
+    top: -30px;
+}
+
+.bannerRight{
+    height: 100vh;
+    /* background-color: black; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bannerRight > img{
+    height: 550px;
+}
+

@@ -1,0 +1,49 @@
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.headerLeft{
+    /* background-color: #fff; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    left: -35px;
+}
+
+.headerRight{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.headerRight > .ant-typography{
+    margin-left: 10px;
+}
+
+.contentTop{
+    display: flex;
+    width: 70%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.contentTopLeft{
+    
+    width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.contentBottom {
+    /* background-color: blue; */
+    display: flex;
+    width: 70%;
+    align-items: center;
+    justify-content: center;
+}
+
+
