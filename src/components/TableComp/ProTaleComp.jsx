@@ -12,11 +12,11 @@ export default function ProTableComp() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [form] = Form.useForm()
   const tagOptions = [
-    { label: "HTML", value: "HTML" },
-    { label: "REACT", value: "REACT" },
-    { label: "CSS", value: "CSS" },
-    { label: "IMPORTANT", value: "IMPORTANT" },
-    { label: "LOW PRIORITY", value: "LOW PRIORITY" }
+    { label: "HTML", value: "HTML",color:"red" },
+    { label: "REACT", value: "REACT",color:"green" },
+    { label: "CSS", value: "CSS",color:"blue" },
+    { label: "IMPORTANT", value: "IMPORTANT",color:"red" },
+    { label: "LOW PRIORITY", value: "LOW PRIORITY",color:"orange" }
   ]
 
 
@@ -187,7 +187,7 @@ export default function ProTableComp() {
       key: 'dueDate',
       valueType: 'dateTime',
       render: (text, record) => {
-        if(!record.dueDate){
+        if (!record.dueDate) {
           return '-'
         }
         return moment(record.dueDate).format('YYYY-MM-DD')
@@ -274,14 +274,33 @@ export default function ProTableComp() {
     setIsAddModalOpen(false)
   }
 
-  const validateDueDate = (rule, value)=>{
+  const validateDueDate = (rule, value) => {
     console.log(rule, value)
-    if(value && value < moment()){
+    if (value && value < moment()) {
       return Promise.reject('Due date cannot be before the current time')
     }
     return Promise.resolve()
   }
 
+  // const renderTagOption = (options) => {
+  //   if (!Array.isArray(options)) {
+  //     return '-'
+  //   }
+  //   if (options.length === 0) {
+  //     return '-'
+  //   }
+
+  //   return <>
+  //     {options.map((option) => {
+  //       <div
+  //         key={option.value}
+  //         style={{ color: option.color }}
+  //       >
+  //         {option.label}
+  //       </div>
+  //     })}
+  //   </>
+  // }
 
 
 
@@ -309,23 +328,23 @@ export default function ProTableComp() {
         onCancel={handleAddCancel}
         okText="Submit"
       >
-        <Form form={form} onFinish={handleAddSubmit} initialValues={{status:'OPEN'}}>
-          <Form.Item name={"timestamp"} initialValue={moment()} hidden />
-          <Form.Item name={"title"} label="Title" rules={[{ required: true, max: 100 }]}>
+        <Form form={form} onFinish={handleAddSubmit} initialValues={{ status: 'OPEN' }}>
+          <Form.Item name="timestamp" initialValue={moment()} hidden />
+          <Form.Item name="title" label="Title" rules={[{ required: true, max: 100 }]}>
             <Input />
           </Form.Item>
           <Form.Item name="description" label="Description" rules={[{ required: true, max: 100 }]}>
             <Input.TextArea />
           </Form.Item>
-          <Form.Item name="dueDate" label="Due Date" rules={[{ required: false },{validator:validateDueDate}]}>
+          <Form.Item name="dueDate" label="Due Date" rules={[{ required: false }, { validator: validateDueDate }]}>
             <DatePicker />
           </Form.Item>
           <Form.Item name="tags" label="Tags">
             <Select mode="multiple" options={tagOptions} />
           </Form.Item>
           <Form.Item name="status" label="Status" rules={[{ required: true }]}>
-            <Select defaultValue='OPEN'>
-              <Select.Option  value="OPEN">Open</Select.Option>
+            <Select>
+              <Select.Option value="OPEN">Open</Select.Option>
               <Select.Option value="WORKING">Working</Select.Option>
               <Select.Option value="DONE">Done</Select.Option>
               <Select.Option value="OVERDUE">OVerdue</Select.Option>
