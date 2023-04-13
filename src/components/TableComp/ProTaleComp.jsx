@@ -307,9 +307,17 @@ export default function ProTableComp() {
 
   const handleUpdateSubmit = () => {
     let values = form.getFieldsValue()
+    const date = ()=>{
+      if(!form.getFieldValue('dueDate') || form.getFieldValue('dueDate').valueOf() == undefined){
+        return '-'
+      }
+      else{
+        return form.getFieldValue('dueDate').valueOf()
+      }
+    }
     values = {
       ...values,
-      dueDate:form.getFieldValue('dueDate').valueOf()
+      dueDate: date()
     }
     console.log(values)
     setData((prevData) => {
