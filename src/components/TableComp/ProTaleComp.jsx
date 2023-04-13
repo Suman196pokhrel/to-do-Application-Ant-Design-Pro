@@ -290,12 +290,23 @@ export default function ProTableComp() {
 
   const handleAddSubmit = (values) => {
 
+    const date = ()=>{
+      if(_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined){
+        return null
+      }
+      else{
+        return form.getFieldValue('dueDate').valueOf()
+      }
+    }
+
     form.validateFields()
       .then((validatedValues) => {
-        console.log("Form values ", validatedValues)
+        console.log("Form values ",  validatedValues['dueDate'])
         const newData = {
           // id: Date.now().toString(36) + Math.random().toString(36).substring(2, 7),
           ...values,
+          dueDate: date()
+          
         }
         setData([...data, newData])
         form.resetFields()
