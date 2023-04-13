@@ -5,9 +5,9 @@ import { ConfigProvider, Tag, Button, Input } from 'antd';
 
 
 
-const ToolBarComp = ({setIsAddModalOpen}) => {
+const ToolBarComp = ({ setIsAddModalOpen, handleSearch }) => {
 
-  const handleAddClick=()=>{
+  const handleAddClick = () => {
     setIsAddModalOpen(true)
   }
 
@@ -17,28 +17,22 @@ const ToolBarComp = ({setIsAddModalOpen}) => {
 
   return (
     <div className='toolBar'>
-            <div className="searchBar">
-            <Input
-            placeholder='Search tasks'
-            style={{ width: "265px", height: "35px" }}
-          />
-          <Button
-            style={{
-              borderRadius: "5px",
-              width: "160px",
-              height: "40px",
-              fontSize: "15px",
-              marginLeft:"10px"
-            }}
-            icon={<SearchOutlined />}
-            type='primary' >Search</Button>
-            </div>
-            
-            <Button
-            onClick={()=>handleAddClick()}
-            type='primary'
-            icon={<PlusOutlined />}
-          >Add task</Button>
+
+      <Input.Search
+        placeholder='Search tasks'
+        allowClear
+        onSearch={handleSearch}
+        style={{ width: "265px", height: "35px" }}
+        // onChange={(e)=>handleSearch(e.target.value)}
+      />
+
+
+
+      <Button
+        onClick={() => handleAddClick()}
+        type='primary'
+        icon={<PlusOutlined />}
+      >Add task</Button>
     </div>
   )
 }

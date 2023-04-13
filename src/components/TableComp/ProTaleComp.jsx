@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import "../TableComp/ProTableComp.css"
 import { ConfigProvider, Tag, Button, Input, Modal, Form, DatePicker, Popconfirm, Select } from 'antd';
 import enUS from 'antd/es/locale/en_US';
@@ -6,13 +6,14 @@ import { ProTable, EditableProTable } from '@ant-design/pro-table';
 import moment from 'moment/moment';
 import ToolBarComp from './ToolBarComp';
 import _ from 'lodash'
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 
 export default function ProTableComp() {
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
+  const [searchText, setSearchText] = useState('')
   const [form] = Form.useForm()
   const tagOptions = [
     { label: "HTML", value: "HTML", color: "red" },
@@ -31,10 +32,10 @@ export default function ProTableComp() {
   ]
 
   const statusFilter = [
-    {text:"OPEN",value:"OPEN",color:"blue"},
-    {text:"WORKING",value:"WORKING",color:"orange"},
-    {text:"DONE",value:"DONE",color:"green"},
-    {text:"OVERDUE",value:"OVERDUE",color:"red"},
+    { text: "OPEN", value: "OPEN", color: "blue" },
+    { text: "WORKING", value: "WORKING", color: "orange" },
+    { text: "DONE", value: "DONE", color: "green" },
+    { text: "OVERDUE", value: "OVERDUE", color: "red" },
 
   ]
 
@@ -262,12 +263,12 @@ export default function ProTableComp() {
 
 
       },
-      filters:tagFilters,
-      onFilter : (value, record)=>{
-        const tags = record.tags.map((tag)=> tag.toUpperCase())
+      filters: tagFilters,
+      onFilter: (value, record) => {
+        const tags = record.tags.map((tag) => tag.toUpperCase())
         return tags.includes(value.toUpperCase())
       }
-      
+
     },
     {
       title: 'Status',
@@ -295,8 +296,8 @@ export default function ProTableComp() {
         )
 
       },
-      filters:statusFilter,
-      onFilter:(value, record)=>{
+      filters: statusFilter,
+      onFilter: (value, record) => {
         const status = record.status.toUpperCase()
         return status.includes(value.toUpperCase())
       }
@@ -442,22 +443,45 @@ export default function ProTableComp() {
   }
 
 
+  // Adds RelTime Search Functionality 
+  const handleSearch = (value) => {
+    // if (value === '') {
+    //   setData(data)
+    //   return
+    // } else {
+    //   const filteredData = data.filter((item) =>
+    //     Object.keys(item).some((key) =>
+    //       item[key] && item[key].toString().toLowerCase().includes(value.toLowerCase())
+    //     )
+    //   );
+    //   setData(filteredData);
+    // }
+
+    setSearchText(value)
+
+  }
+
 
   return (
     <ConfigProvider locale={enUS}>
 
       <ProTable
-        style={{
-
-          width: "100%"
-        }}
+        style={{ width: "100%" }}
         className='proTable'
         rowKey={(record) => record.id}
         columns={columns}
-        dataSource={data}
-        pagination={{ pageSize: 6 }}
+        // dataSource={data}
+        pagination={{ pageSize: 6, showQuickJumper: true }}
         search={false}
-        toolBarRender={() => <ToolBarComp setIsAddModalOpen={setIsAddModalOpen} />}
+        options={false}
+        dataSource={data.filter((item) =>
+          Object.keys(item).some((key) =>
+            item[key] && item[key].toString().toLowerCase().includes(searchText.toLowerCase())
+          )
+        )}
+       
+      
+        toolBarRender={() => <ToolBarComp setIsAddModalOpen={setIsAddModalOpen} handleSearch={handleSearch} />}
       />
 
 
@@ -470,7 +494,7 @@ export default function ProTableComp() {
         okText="Submit"
       >
         <Form form={form} onFinish={handleAddSubmit} initialValues={{ status: 'OPEN' }}>
-          <Form.Item name="id"  hidden />
+          <Form.Item name="id" hidden />
           <Form.Item name="timeStamp" hidden />
           <Form.Item name="title" label="Title" rules={[{ required: true, max: 100 }]}>
             <Input />
