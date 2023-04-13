@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import "../TableComp/ProTableComp.css"
-import { ConfigProvider, Tag, Button, Input, Modal, Form, DatePicker, Popconfirm, Select } from 'antd';
+import { ConfigProvider, Tag, Input, Modal, Form, DatePicker, Popconfirm, Select } from 'antd';
 import enUS from 'antd/es/locale/en_US';
-import { ProTable, EditableProTable } from '@ant-design/pro-table';
+import { ProTable } from '@ant-design/pro-table';
 import moment from 'moment/moment';
 import ToolBarComp from './ToolBarComp';
 import _ from 'lodash'
@@ -11,10 +11,17 @@ import { v4 as uuidv4 } from 'uuid'
 
 export default function ProTableComp() {
 
+  // State to View /Hide Add Task Modal 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  // State to  View/Hide Update Modal 
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
+  // State to Store text being currently searched 
   const [searchText, setSearchText] = useState('')
+  // refrence to the inbuilt form component from Antdesign 
   const [form] = Form.useForm()
+
+
+  // Mock data for Table Initialization 
   const tagOptions = [
     { label: "HTML", value: "HTML", color: "red" },
     { label: "REACT", value: "REACT", color: "green" },
@@ -22,7 +29,6 @@ export default function ProTableComp() {
     { label: "IMPORTANT", value: "IMPORTANT", color: "red" },
     { label: "LOW PRIORITY", value: "LOW PRIORITY", color: "orange" }
   ]
-
   const tagFilters = [
     { text: "HTML", value: "HTML", color: "red" },
     { text: "REACT", value: "REACT", color: "green" },
@@ -30,7 +36,6 @@ export default function ProTableComp() {
     { text: "IMPORTANT", value: "IMPORTANT", color: "red" },
     { text: "LOW PRIORITY", value: "LOW PRIORITY", color: "orange" }
   ]
-
   const statusFilter = [
     { text: "OPEN", value: "OPEN", color: "blue" },
     { text: "WORKING", value: "WORKING", color: "orange" },
@@ -38,9 +43,6 @@ export default function ProTableComp() {
     { text: "OVERDUE", value: "OVERDUE", color: "red" },
 
   ]
-
-
-
   const [data, setData] = useState([
     {
       id: '1',
@@ -178,8 +180,6 @@ export default function ProTableComp() {
       status: 'WORKING',
     },
   ])
-
-
   const columns = [
     {
       title: 'id',
@@ -330,8 +330,33 @@ export default function ProTableComp() {
   ];
 
 
+
+
+  // Functions to Populate / Submit Update Function using ant designs form refrence
+  const openUpdateModal = (record) => {
+    setIsUpdateModalOpen(true)
+
+    form.setFieldsValue({
+      id: record.id,
+      timeStamp: moment(record.timeStamp),
+      title: record.title,
+      description: record.description,
+      dueDate: () => {
+        const date = record.dueDate && record.dueDate !== '-' ? moment(record.dueDate) : undefined
+        console.log(date)
+        return date
+      },
+      tags: record.tags,
+      status: record.status
+
+    })
+
+
+
+  }
+
+  // TO Handle Add task Operation  using ant design Form validation 
   const handleAddSubmit = (values) => {
-    console.log("UniQUE => ", uuidv4())
 
     const date = () => {
       if (_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined) {
@@ -368,6 +393,7 @@ export default function ProTableComp() {
 
   }
 
+  // To handle Update task operation using filter method and record.id
   const handleUpdateSubmit = () => {
     let values = form.getFieldsValue()
     const date = () => {
@@ -400,34 +426,28 @@ export default function ProTableComp() {
     setIsUpdateModalOpen(false)
   }
 
+  // TO handle cancel in Add Task  Modals to disable its view
   const handleAddCancel = () => {
     form.resetFields()
     setIsAddModalOpen(false)
   }
 
+  // TO Handle Delete Task using indivisual row ID
+  const handleDelete = (id) => {
+    setData((prevData) => (
+      prevData.filter((item) => item.id !== id)
+    ))
+  }
 
-  const openUpdateModal = (record) => {
-    setIsUpdateModalOpen(true)
+  // To Handle Search Operation on SearchBar 
+  const handleSearch = (value) => {
 
-    form.setFieldsValue({
-      id: record.id,
-      timeStamp: moment(record.timeStamp),
-      title: record.title,
-      description: record.description,
-      dueDate: () => {
-        const date = record.dueDate && record.dueDate !== '-' ? moment(record.dueDate) : undefined
-        console.log(date)
-        return date
-      },
-      tags: record.tags,
-      status: record.status
-
-    })
-
-
+    setSearchText(value)
 
   }
 
+
+  // Custom Validation for Due date (Due date cannot be less than todays date )
   const validateDueDate = (rule, value) => {
     // console.log(rule, value)
     if (value && value < moment()) {
@@ -436,52 +456,31 @@ export default function ProTableComp() {
     return Promise.resolve()
   }
 
-  const handleDelete = (id) => {
-    setData((prevData) => (
-      prevData.filter((item) => item.id !== id)
-    ))
-  }
-
-
-  // Adds RelTime Search Functionality 
-  const handleSearch = (value) => {
-    // if (value === '') {
-    //   setData(data)
-    //   return
-    // } else {
-    //   const filteredData = data.filter((item) =>
-    //     Object.keys(item).some((key) =>
-    //       item[key] && item[key].toString().toLowerCase().includes(value.toLowerCase())
-    //     )
-    //   );
-    //   setData(filteredData);
-    // }
-
-    setSearchText(value)
-
-  }
-
 
   return (
+
+    // To Change the Default language from Chinese to English
     <ConfigProvider locale={enUS}>
 
+
       <ProTable
-        style={{ width: "100%" }}
+        style={{ width: "100%", boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)" }}
         className='proTable'
         rowKey={(record) => record.id}
         columns={columns}
         // dataSource={data}
-        pagination={{ pageSize: 6, showQuickJumper: true }}
-        search={false}
-        options={false}
-        dataSource={data.filter((item) =>
+        options={{ fullScreen: true, setting: true }}
+        headerTitle="Task Table"
+        pagination={{ pageSize: 6, showQuickJumper: true, responsive: true }}
+        search={false}  // TO Disable Complex inbuilt SearchBar
+        dataSource={data.filter((item) =>        //FIltering Every Data of table according to the SearchBar Text 
           Object.keys(item).some((key) =>
             item[key] && item[key].toString().toLowerCase().includes(searchText.toLowerCase())
           )
         )}
        
-      
-        toolBarRender={() => <ToolBarComp setIsAddModalOpen={setIsAddModalOpen} handleSearch={handleSearch} />}
+      // Using Ant Designs inbuilt Search FUnctionality in table toolBar
+      toolBarRender={() => <ToolBarComp setIsAddModalOpen={setIsAddModalOpen} handleSearch={handleSearch} />}
       />
 
 

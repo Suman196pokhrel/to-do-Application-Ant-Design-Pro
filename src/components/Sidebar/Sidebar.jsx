@@ -11,7 +11,7 @@ const Sidebar = () => {
   };
 
   return (
-    <Sider style={siderStyle}></Sider>
+    <Sider breakpoint='md' collapsedWidth={0} style={siderStyle}></Sider>
   )
 }
 

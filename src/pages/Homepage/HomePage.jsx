@@ -21,11 +21,8 @@ const HomePage = () => {
   };
   const contentStyle = {
     backgroundColor: 'white',
-    display:"flex",
-    alignItems:"center",
-    justifyContent:"center",
-    flexDirection: "column",
-    padding:"0 20px 0 20px",
+    width: "100%",
+    padding: "50px 50px 0 15px",
 
 
   };
@@ -58,17 +55,16 @@ const HomePage = () => {
 
 
       <Layout>
-        <Sidebar />
+
+        <Sidebar/>
 
 
         <Content style={contentStyle}>
 
-    
-          <div className="contentBottom">
-            <ProTableComp />
-          </div>
+          <ProTableComp />
 
         </Content>
+
       </Layout>
 
     </Layout>

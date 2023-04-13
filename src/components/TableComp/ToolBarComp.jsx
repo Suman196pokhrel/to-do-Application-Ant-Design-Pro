@@ -21,8 +21,11 @@ const ToolBarComp = ({ setIsAddModalOpen, handleSearch }) => {
       <Input.Search
         placeholder='Search tasks'
         allowClear
+        enterButton="Search"
+        className='searchBar'
         onSearch={handleSearch}
-        style={{ width: "265px", height: "35px" }}
+        size='large'
+        style={{ width: "355px", height: "35px",marginRight:"10px"}}
         // onChange={(e)=>handleSearch(e.target.value)}
       />
 
