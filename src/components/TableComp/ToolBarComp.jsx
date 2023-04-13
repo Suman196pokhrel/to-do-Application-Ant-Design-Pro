@@ -2,6 +2,7 @@ import React from 'react'
 import "../TableComp/ToolBarComp.css"
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { ConfigProvider, Tag, Button, Input } from 'antd';
+import { motion } from 'framer-motion'
 
 
 
@@ -16,7 +17,13 @@ const ToolBarComp = ({ setIsAddModalOpen, handleSearch }) => {
 
 
   return (
-    <div className='toolBar'>
+    <motion.div
+      initial={{ y: -400, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
+
+      className='toolBar'
+    >
 
       <Input.Search
         placeholder='Search tasks'
@@ -25,8 +32,8 @@ const ToolBarComp = ({ setIsAddModalOpen, handleSearch }) => {
         className='searchBar'
         onSearch={handleSearch}
         size='large'
-        style={{ width: "355px", height: "35px",marginRight:"10px"}}
-        // onChange={(e)=>handleSearch(e.target.value)}
+        style={{ width: "355px", height: "35px", marginRight: "10px" }}
+      // onChange={(e)=>handleSearch(e.target.value)}
       />
 
 
@@ -36,7 +43,7 @@ const ToolBarComp = ({ setIsAddModalOpen, handleSearch }) => {
         type='primary'
         icon={<PlusOutlined />}
       >Add task</Button>
-    </div>
+    </motion.div>
   )
 }
 

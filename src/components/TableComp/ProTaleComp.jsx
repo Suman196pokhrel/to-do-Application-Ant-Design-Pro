@@ -7,6 +7,7 @@ import moment from 'moment/moment';
 import ToolBarComp from './ToolBarComp';
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
+import { motion } from 'framer-motion'
 
 
 export default function ProTableComp() {
@@ -462,98 +463,107 @@ export default function ProTableComp() {
     // To Change the Default language from Chinese to English
     <ConfigProvider locale={enUS}>
 
-
-      <ProTable
-        style={{ width: "100%", boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)" }}
-        className='proTable'
-        rowKey={(record) => record.id}
-        columns={columns}
-        // dataSource={data}
-        options={{ fullScreen: true, setting: true }}
-        headerTitle="Task Table"
-        pagination={{ pageSize: 6, showQuickJumper: true, responsive: true }}
-        search={false}  // TO Disable Complex inbuilt SearchBar
-        dataSource={data.filter((item) =>        //FIltering Every Data of table according to the SearchBar Text 
-          Object.keys(item).some((key) =>
-            item[key] && item[key].toString().toLowerCase().includes(searchText.toLowerCase())
-          )
-        )}
-       
-      // Using Ant Designs inbuilt Search FUnctionality in table toolBar
-      toolBarRender={() => <ToolBarComp setIsAddModalOpen={setIsAddModalOpen} handleSearch={handleSearch} />}
-      />
-
-
-      {/* Modal to Handle Add task  */}
-      <Modal
-        title="Add Task"
-        open={isAddModalOpen}
-        onOk={() => handleAddSubmit(form.getFieldsValue())}
-        onCancel={handleAddCancel}
-        okText="Submit"
+      <motion.div
+        initial={{ y: 300, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{  type:"spring"}}
       >
-        <Form form={form} onFinish={handleAddSubmit} initialValues={{ status: 'OPEN' }}>
-          <Form.Item name="id" hidden />
-          <Form.Item name="timeStamp" hidden />
-          <Form.Item name="title" label="Title" rules={[{ required: true, max: 100 }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="description" label="Description" rules={[{ required: true, max: 100 }]}>
-            <Input.TextArea />
-          </Form.Item>
-          <Form.Item name="dueDate" label="Due Date" rules={[{ required: false }, { validator: validateDueDate }]}>
-            <DatePicker />
-          </Form.Item>
-          <Form.Item name="tags" label="Tags">
-            <Select mode="multiple" options={tagOptions} />
-          </Form.Item>
-          <Form.Item name="status" label="Status" rules={[{ required: true }]}>
-            <Select>
-              <Select.Option value="OPEN">Open</Select.Option>
-              <Select.Option value="WORKING">Working</Select.Option>
-              <Select.Option value="DONE">Done</Select.Option>
-              <Select.Option value="OVERDUE">OVerdue</Select.Option>
 
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
+        <ProTable
+
+          style={{ width: "100%", overflow: "scroll", boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)" }}
+          className='proTable'
+          rowKey={(record) => record.id}
+          columns={columns}
+          // dataSource={data}
+          options={{ fullScreen: true, setting: true }}
+          headerTitle="Task Table"
+          pagination={{ pageSize: 6, showQuickJumper: true, responsive: true }}
+          search={false}  // TO Disable Complex inbuilt SearchBar
+          dataSource={data.filter((item) =>        //FIltering Every Data of table according to the SearchBar Text 
+            Object.keys(item).some((key) =>
+              item[key] && item[key].toString().toLowerCase().includes(searchText.toLowerCase())
+            )
+          )}
+
+          // Using Ant Designs inbuilt Search FUnctionality in table toolBar
+          toolBarRender={() => <ToolBarComp setIsAddModalOpen={setIsAddModalOpen} handleSearch={handleSearch} />}
+        />
 
 
-      {/* Modal To Handle Update Task */}
-      <Modal
-        title="Update Task"
-        open={isUpdateModalOpen}
-        onOk={() => handleUpdateSubmit()}
-        onCancel={() => { setIsUpdateModalOpen(false); form.resetFields() }}
-        okText="Update"
-      >
-        <Form form={form} onFinish={handleAddSubmit} initialValues={{ status: 'OPEN' }}>
-          <Form.Item name="id" initialValue={Date.now().toString(36) + Math.random().toString(36).substring(2, 7)} hidden />
-          <Form.Item name="timestamp" hidden />
-          <Form.Item name="title" label="Title" rules={[{ required: true, max: 100 }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="description" label="Description" rules={[{ required: true, max: 100 }]}>
-            <Input.TextArea />
-          </Form.Item>
-          <Form.Item name="dueDate" label="Due Date" rules={[{ required: false }, { validator: validateDueDate }]}>
-            <DatePicker />
-          </Form.Item>
-          <Form.Item name="tags" label="Tags">
-            <Select mode="multiple" options={tagOptions} />
-          </Form.Item>
-          <Form.Item name="status" label="Status" rules={[{ required: true }]}>
-            <Select>
-              <Select.Option value="OPEN">Open</Select.Option>
-              <Select.Option value="WORKING">Working</Select.Option>
-              <Select.Option value="DONE">Done</Select.Option>
-              <Select.Option value="OVERDUE">OVerdue</Select.Option>
+        {/* Modal to Handle Add task  */}
+        <Modal
+          title="Add Task"
+          open={isAddModalOpen}
+          onOk={() => handleAddSubmit(form.getFieldsValue())}
+          onCancel={handleAddCancel}
+          okText="Submit"
+        >
+          <Form form={form} onFinish={handleAddSubmit} initialValues={{ status: 'OPEN' }}>
+            <Form.Item name="id" hidden />
+            <Form.Item name="timeStamp" hidden />
+            <Form.Item name="title" label="Title" rules={[{ required: true, max: 100 }]}>
+              <Input />
+            </Form.Item>
+            <Form.Item name="description" label="Description" rules={[{ required: true, max: 100 }]}>
+              <Input.TextArea />
+            </Form.Item>
+            <Form.Item name="dueDate" label="Due Date" rules={[{ required: false }, { validator: validateDueDate }]}>
+              <DatePicker />
+            </Form.Item>
+            <Form.Item name="tags" label="Tags">
+              <Select mode="multiple" options={tagOptions} />
+            </Form.Item>
+            <Form.Item name="status" label="Status" rules={[{ required: true }]}>
+              <Select>
+                <Select.Option value="OPEN">Open</Select.Option>
+                <Select.Option value="WORKING">Working</Select.Option>
+                <Select.Option value="DONE">Done</Select.Option>
+                <Select.Option value="OVERDUE">OVerdue</Select.Option>
 
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
+              </Select>
+            </Form.Item>
+          </Form>
+        </Modal>
+
+
+        {/* Modal To Handle Update Task */}
+        <Modal
+          title="Update Task"
+          open={isUpdateModalOpen}
+          onOk={() => handleUpdateSubmit()}
+          onCancel={() => { setIsUpdateModalOpen(false); form.resetFields() }}
+          okText="Update"
+        >
+          <Form form={form} onFinish={handleAddSubmit} initialValues={{ status: 'OPEN' }}>
+            <Form.Item name="id" initialValue={Date.now().toString(36) + Math.random().toString(36).substring(2, 7)} hidden />
+            <Form.Item name="timestamp" hidden />
+            <Form.Item name="title" label="Title" rules={[{ required: true, max: 100 }]}>
+              <Input />
+            </Form.Item>
+            <Form.Item name="description" label="Description" rules={[{ required: true, max: 100 }]}>
+              <Input.TextArea />
+            </Form.Item>
+            <Form.Item name="dueDate" label="Due Date" rules={[{ required: false }, { validator: validateDueDate }]}>
+              <DatePicker />
+            </Form.Item>
+            <Form.Item name="tags" label="Tags">
+              <Select mode="multiple" options={tagOptions} />
+            </Form.Item>
+            <Form.Item name="status" label="Status" rules={[{ required: true }]}>
+              <Select>
+                <Select.Option value="OPEN">Open</Select.Option>
+                <Select.Option value="WORKING">Working</Select.Option>
+                <Select.Option value="DONE">Done</Select.Option>
+                <Select.Option value="OVERDUE">OVerdue</Select.Option>
+
+              </Select>
+            </Form.Item>
+          </Form>
+        </Modal>
+
+      </motion.div>
+
 
     </ConfigProvider>
   );
