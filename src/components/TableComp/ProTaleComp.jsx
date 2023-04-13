@@ -6,6 +6,7 @@ import { ProTable, EditableProTable } from '@ant-design/pro-table';
 import moment from 'moment/moment';
 import ToolBarComp from './ToolBarComp';
 import _ from 'lodash'
+import {v4 as uuidv4} from 'uuid'
 
 
 export default function ProTableComp() {
@@ -178,7 +179,14 @@ export default function ProTableComp() {
       key: 'timeStamp',
       valueType: 'dateTime',
       render: (text, record) => moment(record.timeStamp).format('YYYY-MM-DD HH:mm:ss'),
-      
+      sorter: (a, b) => {
+        console.log("Sorter Executed ", a.timeStamp, b.timeStamp)
+        const aTime = moment(a.timeStamp).unix();
+        const bTime = moment(b.timeStamp).unix();
+        return (aTime - bTime)
+      },
+
+
     },
     {
       title: 'Title',
@@ -205,9 +213,9 @@ export default function ProTableComp() {
         }
         return moment(record.dueDate).format('YYYY-MM-DD')
       },
-      sorter:(a,b)=>{
-        console.log(a,b)
-        return a.dueDate- b.dueDate
+      sorter: (a, b) => {
+        // console.log(a,b)
+        return a.dueDate - b.dueDate
       }
     },
     {
@@ -295,6 +303,7 @@ export default function ProTableComp() {
 
 
   const handleAddSubmit = (values) => {
+    console.log("UniQUE => ", uuidv4())
 
     const date = () => {
       if (_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined) {
@@ -309,18 +318,54 @@ export default function ProTableComp() {
       .then((validatedValues) => {
         console.log("Form values ", validatedValues['dueDate'])
         const newData = {
-          // id: Date.now().toString(36) + Math.random().toString(36).substring(2, 7),
+          id: uuidv4().toString(),
           ...values,
-          dueDate: date()
+          dueDate: date(),
+          timeStamp: moment().valueOf()
 
         }
-        setData([...data, newData])
+        setData([newData, ...data])
+        console.log("Form Data While Adding Task ,", {
+          // id: Date.now().toString(36) + Math.random().toString(36).substring(2, 7),
+          id: uuidv4().toString(),
+          ...values,
+          dueDate: date(),
+          timeStamp: moment().valueOf()
+
+        })
         form.resetFields()
         setIsAddModalOpen(false)
       })
 
 
   }
+
+  //   const handleAddSubmit = (values) => {
+  //   const date = () => {
+  //     if (_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined) {
+  //       return null
+  //     } else {
+  //       return form.getFieldValue('dueDate').valueOf()
+  //     }
+  //   }
+
+  //   form.validateFields().then((validatedValues) => {
+  //     console.log("Form values ", validatedValues['dueDate'])
+  //     const newData = {
+  //       ...values,
+  //       dueDate: date(),
+  //       timeStamp: moment().valueOf()
+  //     }
+  //     const sortedData = [...data, newData].sort((a, b) => a.timeStamp - b.timeStamp)
+  //     setData(sortedData)
+  //     console.log("Form Data While Adding Task ,", {
+  //       ...values,
+  //       dueDate: date()
+  //     })
+  //     form.resetFields()
+  //     setIsAddModalOpen(false)
+  //   })
+  // }
 
 
   const handleUpdateSubmit = () => {
@@ -408,7 +453,7 @@ export default function ProTableComp() {
           width: "100%"
         }}
         className='proTable'
-        rowKey={(record)=> record.id}
+        rowKey={(record) => record.id}
         columns={columns}
         dataSource={data}
         pagination={{ pageSize: 6 }}
@@ -426,8 +471,8 @@ export default function ProTableComp() {
         okText="Submit"
       >
         <Form form={form} onFinish={handleAddSubmit} initialValues={{ status: 'OPEN' }}>
-          <Form.Item name="id" initialValue={Date.now().toString(36) + Math.random().toString(36).substring(2, 7)} hidden />
-          <Form.Item name="timestamp" initialValue={moment()} hidden />
+          <Form.Item name="id"  hidden />
+          <Form.Item name="timeStamp" hidden />
           <Form.Item name="title" label="Title" rules={[{ required: true, max: 100 }]}>
             <Input />
           </Form.Item>
