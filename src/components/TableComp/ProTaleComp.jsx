@@ -305,21 +305,29 @@ export default function ProTableComp() {
   }
 
 
-  const handleUpdateSubmit = (values) => {
+  const handleUpdateSubmit = () => {
+    let values = form.getFieldsValue()
+    values = {
+      ...values,
+      dueDate:form.getFieldValue('dueDate').valueOf()
+    }
+    console.log(values)
     setData((prevData) => {
       const rowIndex = prevData.findIndex((row) => row.id === values.id)
       if (rowIndex >= 0) {
         const updatedData = [
           ...prevData.slice(0, rowIndex),
-          ...values,
+          values,
           ...prevData.slice(rowIndex + 1)
         ]
+        console.log(updatedData)
         form.resetFields()
         return updatedData
       }
       return prevData
 
     })
+    setIsUpdateModalOpen(false)
   }
 
   const handleAddCancel = () => {
@@ -330,14 +338,15 @@ export default function ProTableComp() {
 
   const openUpdateModal = (record)=>{
     setIsUpdateModalOpen(true)
-
+    
     form.setFieldsValue({
       id:record.id,
       timeStamp:moment(record.timeStamp),
       title:record.title,
       description:record.description,
       dueDate:()=>{
-        const date = record.dueDate && record.dueDate !== '-'? moment(record.dueDate): undefined
+        const date = record.dueDate && record.dueDate !== '-'?  moment(record.dueDate):undefined
+        console.log(date)
         return date
       },
       tags:record.tags,
@@ -345,10 +354,12 @@ export default function ProTableComp() {
 
     })
 
+    
+
   }
 
   const validateDueDate = (rule, value) => {
-    console.log(rule, value)
+    // console.log(rule, value)
     if (value && value < moment()) {
       return Promise.reject('Due date cannot be before the current time')
     }
@@ -421,19 +432,20 @@ export default function ProTableComp() {
       <Modal
         title="Update Task"
         open={isUpdateModalOpen}
-        onOk={() => handleUpdateSubmit(form.getFieldsValue())}
+        onOk={() => handleUpdateSubmit()}
         onCancel={()=>{setIsUpdateModalOpen(false);form.resetFields()}}
         okText="Update"
       >
         <Form form={form} onFinish={handleAddSubmit} initialValues={{ status: 'OPEN' }}>
-          <Form.Item name="timestamp" initialValue={moment()} hidden />
+        <Form.Item name="id" initialValue={Date.now().toString(36) + Math.random().toString(36).substring(2, 7)} hidden />
+          <Form.Item name="timestamp" hidden />
           <Form.Item name="title" label="Title" rules={[{ required: true, max: 100 }]}>
             <Input />
           </Form.Item>
           <Form.Item name="description" label="Description" rules={[{ required: true, max: 100 }]}>
             <Input.TextArea />
           </Form.Item>
-          <Form.Item name="dueDate" label="Due Date" rules={[{ required: false }, { validator: validateDueDate }]}>
+          <Form.Item name="dueDate" label="Due Date"  rules={[{ required: false }, { validator: validateDueDate }]}>
             <DatePicker />
           </Form.Item>
           <Form.Item name="tags" label="Tags">
