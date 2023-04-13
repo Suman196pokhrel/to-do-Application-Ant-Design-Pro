@@ -22,6 +22,21 @@ export default function ProTableComp() {
     { label: "LOW PRIORITY", value: "LOW PRIORITY", color: "orange" }
   ]
 
+  const tagFilters = [
+    { text: "HTML", value: "HTML", color: "red" },
+    { text: "REACT", value: "REACT", color: "green" },
+    { text: "CSS", value: "CSS", color: "blue" },
+    { text: "IMPORTANT", value: "IMPORTANT", color: "red" },
+    { text: "LOW PRIORITY", value: "LOW PRIORITY", color: "orange" }
+  ]
+
+  const statusFilter = [
+    {text:"OPEN",value:"OPEN",color:"blue"},
+    {text:"WORKING",value:"WORKING",color:"orange"},
+    {text:"DONE",value:"DONE",color:"green"},
+    {text:"OVERDUE",value:"OVERDUE",color:"red"},
+
+  ]
 
 
 
@@ -246,7 +261,13 @@ export default function ProTableComp() {
 
 
 
+      },
+      filters:tagFilters,
+      onFilter : (value, record)=>{
+        const tags = record.tags.map((tag)=> tag.toUpperCase())
+        return tags.includes(value.toUpperCase())
       }
+      
     },
     {
       title: 'Status',
@@ -273,7 +294,13 @@ export default function ProTableComp() {
           </Tag>
         )
 
+      },
+      filters:statusFilter,
+      onFilter:(value, record)=>{
+        const status = record.status.toUpperCase()
+        return status.includes(value.toUpperCase())
       }
+
     },
     {
       title: 'Action',
