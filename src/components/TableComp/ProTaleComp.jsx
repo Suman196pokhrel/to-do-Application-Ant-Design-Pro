@@ -177,20 +177,21 @@ export default function ProTableComp() {
       dataIndex: 'timeStamp',
       key: 'timeStamp',
       valueType: 'dateTime',
-      render: (text, record) => moment(record.timeStamp).format('YYYY-MM-DD HH:mm:ss')
+      render: (text, record) => moment(record.timeStamp).format('YYYY-MM-DD HH:mm:ss'),
+      
     },
     {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      sorter:(a,b)=>a.title.localeCompare(b.title),
+      sorter: (a, b) => a.title.localeCompare(b.title),
       render: (text) => <a>{text}</a>,
     },
     {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
-      sorter:(a,b)=>a.description.localeCompare(b.description)
+      sorter: (a, b) => a.description.localeCompare(b.description)
 
     },
     {
@@ -203,6 +204,10 @@ export default function ProTableComp() {
           return '-'
         }
         return moment(record.dueDate).format('YYYY-MM-DD')
+      },
+      sorter:(a,b)=>{
+        console.log(a,b)
+        return a.dueDate- b.dueDate
       }
     },
     {
@@ -291,23 +296,23 @@ export default function ProTableComp() {
 
   const handleAddSubmit = (values) => {
 
-    const date = ()=>{
-      if(_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined){
+    const date = () => {
+      if (_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined) {
         return null
       }
-      else{
+      else {
         return form.getFieldValue('dueDate').valueOf()
       }
     }
 
     form.validateFields()
       .then((validatedValues) => {
-        console.log("Form values ",  validatedValues['dueDate'])
+        console.log("Form values ", validatedValues['dueDate'])
         const newData = {
           // id: Date.now().toString(36) + Math.random().toString(36).substring(2, 7),
           ...values,
           dueDate: date()
-          
+
         }
         setData([...data, newData])
         form.resetFields()
@@ -320,11 +325,11 @@ export default function ProTableComp() {
 
   const handleUpdateSubmit = () => {
     let values = form.getFieldsValue()
-    const date = ()=>{
-      if(_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined){
+    const date = () => {
+      if (_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined) {
         return null
       }
-      else{
+      else {
         return form.getFieldValue('dueDate').valueOf()
       }
     }
@@ -332,7 +337,7 @@ export default function ProTableComp() {
       ...values,
       dueDate: date()
     }
-    
+
     setData((prevData) => {
       const rowIndex = prevData.findIndex((row) => row.id === values.id)
       if (rowIndex >= 0) {
@@ -356,25 +361,25 @@ export default function ProTableComp() {
   }
 
 
-  const openUpdateModal = (record)=>{
+  const openUpdateModal = (record) => {
     setIsUpdateModalOpen(true)
-    
+
     form.setFieldsValue({
-      id:record.id,
-      timeStamp:moment(record.timeStamp),
-      title:record.title,
-      description:record.description,
-      dueDate:()=>{
-        const date = record.dueDate && record.dueDate !== '-'?  moment(record.dueDate):undefined
+      id: record.id,
+      timeStamp: moment(record.timeStamp),
+      title: record.title,
+      description: record.description,
+      dueDate: () => {
+        const date = record.dueDate && record.dueDate !== '-' ? moment(record.dueDate) : undefined
         console.log(date)
         return date
       },
-      tags:record.tags,
-      status:record.status
+      tags: record.tags,
+      status: record.status
 
     })
 
-    
+
 
   }
 
@@ -403,7 +408,7 @@ export default function ProTableComp() {
           width: "100%"
         }}
         className='proTable'
-        rowKey="id"
+        rowKey={(record)=> record.id}
         columns={columns}
         dataSource={data}
         pagination={{ pageSize: 6 }}
@@ -453,11 +458,11 @@ export default function ProTableComp() {
         title="Update Task"
         open={isUpdateModalOpen}
         onOk={() => handleUpdateSubmit()}
-        onCancel={()=>{setIsUpdateModalOpen(false);form.resetFields()}}
+        onCancel={() => { setIsUpdateModalOpen(false); form.resetFields() }}
         okText="Update"
       >
         <Form form={form} onFinish={handleAddSubmit} initialValues={{ status: 'OPEN' }}>
-        <Form.Item name="id" initialValue={Date.now().toString(36) + Math.random().toString(36).substring(2, 7)} hidden />
+          <Form.Item name="id" initialValue={Date.now().toString(36) + Math.random().toString(36).substring(2, 7)} hidden />
           <Form.Item name="timestamp" hidden />
           <Form.Item name="title" label="Title" rules={[{ required: true, max: 100 }]}>
             <Input />
@@ -465,7 +470,7 @@ export default function ProTableComp() {
           <Form.Item name="description" label="Description" rules={[{ required: true, max: 100 }]}>
             <Input.TextArea />
           </Form.Item>
-          <Form.Item name="dueDate" label="Due Date"  rules={[{ required: false }, { validator: validateDueDate }]}>
+          <Form.Item name="dueDate" label="Due Date" rules={[{ required: false }, { validator: validateDueDate }]}>
             <DatePicker />
           </Form.Item>
           <Form.Item name="tags" label="Tags">
