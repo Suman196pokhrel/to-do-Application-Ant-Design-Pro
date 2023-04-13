@@ -367,34 +367,6 @@ export default function ProTableComp() {
 
   }
 
-  //   const handleAddSubmit = (values) => {
-  //   const date = () => {
-  //     if (_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined) {
-  //       return null
-  //     } else {
-  //       return form.getFieldValue('dueDate').valueOf()
-  //     }
-  //   }
-
-  //   form.validateFields().then((validatedValues) => {
-  //     console.log("Form values ", validatedValues['dueDate'])
-  //     const newData = {
-  //       ...values,
-  //       dueDate: date(),
-  //       timeStamp: moment().valueOf()
-  //     }
-  //     const sortedData = [...data, newData].sort((a, b) => a.timeStamp - b.timeStamp)
-  //     setData(sortedData)
-  //     console.log("Form Data While Adding Task ,", {
-  //       ...values,
-  //       dueDate: date()
-  //     })
-  //     form.resetFields()
-  //     setIsAddModalOpen(false)
-  //   })
-  // }
-
-
   const handleUpdateSubmit = () => {
     let values = form.getFieldsValue()
     const date = () => {
