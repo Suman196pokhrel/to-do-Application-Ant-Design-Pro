@@ -5,6 +5,7 @@ import enUS from 'antd/es/locale/en_US';
 import { ProTable, EditableProTable } from '@ant-design/pro-table';
 import moment from 'moment/moment';
 import ToolBarComp from './ToolBarComp';
+import _ from 'lodash'
 
 
 export default function ProTableComp() {
@@ -308,8 +309,8 @@ export default function ProTableComp() {
   const handleUpdateSubmit = () => {
     let values = form.getFieldsValue()
     const date = ()=>{
-      if(!form.getFieldValue('dueDate') || form.getFieldValue('dueDate').valueOf() == undefined){
-        return '-'
+      if(_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined){
+        return null
       }
       else{
         return form.getFieldValue('dueDate').valueOf()
@@ -319,7 +320,7 @@ export default function ProTableComp() {
       ...values,
       dueDate: date()
     }
-    console.log(values)
+    
     setData((prevData) => {
       const rowIndex = prevData.findIndex((row) => row.id === values.id)
       if (rowIndex >= 0) {
@@ -328,7 +329,6 @@ export default function ProTableComp() {
           values,
           ...prevData.slice(rowIndex + 1)
         ]
-        console.log(updatedData)
         form.resetFields()
         return updatedData
       }
