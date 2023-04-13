@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import "../TableComp/ProTableComp.css"
-import { ConfigProvider, Tag, Button, Input, Modal, Form, DatePicker, Popconfirm , Select } from 'antd';
+import { ConfigProvider, Tag, Button, Input, Modal, Form, DatePicker, Popconfirm, Select } from 'antd';
 import enUS from 'antd/es/locale/en_US';
-import { ProTable} from '@ant-design/pro-table';
+import { ProTable, EditableProTable } from '@ant-design/pro-table';
 import moment from 'moment/moment';
 import ToolBarComp from './ToolBarComp';
 
@@ -10,13 +10,14 @@ import ToolBarComp from './ToolBarComp';
 export default function ProTableComp() {
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const [form] = Form.useForm()
   const tagOptions = [
-    { label: "HTML", value: "HTML",color:"red" },
-    { label: "REACT", value: "REACT",color:"green" },
-    { label: "CSS", value: "CSS",color:"blue" },
-    { label: "IMPORTANT", value: "IMPORTANT",color:"red" },
-    { label: "LOW PRIORITY", value: "LOW PRIORITY",color:"orange" }
+    { label: "HTML", value: "HTML", color: "red" },
+    { label: "REACT", value: "REACT", color: "green" },
+    { label: "CSS", value: "CSS", color: "blue" },
+    { label: "IMPORTANT", value: "IMPORTANT", color: "red" },
+    { label: "LOW PRIORITY", value: "LOW PRIORITY", color: "orange" }
   ]
 
 
@@ -163,11 +164,12 @@ export default function ProTableComp() {
 
   const columns = [
     {
-      title:'Task ID',
-      dataIndex:"id",
-      hideInTable:true,
-      hideInSearch:true,
-      hideInForm:true
+      title: 'id',
+      dataIndex: "id",
+      key: "id",
+      hideInTable: true,
+      hideInSearch: true,
+      // hideInForm: true
     },
     {
       title: 'Time Stamp',
@@ -187,6 +189,7 @@ export default function ProTableComp() {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
+
     },
     {
       title: 'Due Date',
@@ -258,17 +261,28 @@ export default function ProTableComp() {
       }
     },
     {
-      title:'Action',
-      dataIndex:'action',
-      valueType:'option',
-      render:(_,record)=>(
-        <Popconfirm
-        title="Are you sure to delete this task ?"
-        onConfirm={()=>handleDelete(record.id)}
-        >
-          <a>Delete</a>
-        </Popconfirm>
+      title: 'Action',
+      dataIndex: 'action',
+      valueType: 'option',
+      render: (_, record) => (
+        <div className='actions'>
+
+          <div className="updateAction">
+            <a onClick={() => openUpdateModal(record)}>Update</a>
+          </div>
+
+          <Popconfirm
+            title="Are you sure to delete this task ?"
+            onConfirm={() => handleDelete(record.id)}
+          >
+            <a style={{ color: "red" }}>Delete</a>
+          </Popconfirm>
+
+
+        </div>
+
       )
+
     }
   ];
 
@@ -277,8 +291,9 @@ export default function ProTableComp() {
 
     form.validateFields()
       .then((validatedValues) => {
+        console.log("Form values ", validatedValues)
         const newData = {
-          id: Date.now().toString(36) + Math.random().toString(36).substring(2, 7),
+          // id: Date.now().toString(36) + Math.random().toString(36).substring(2, 7),
           ...values,
         }
         setData([...data, newData])
@@ -289,9 +304,47 @@ export default function ProTableComp() {
 
   }
 
+
+  const handleUpdateSubmit = (values) => {
+    setData((prevData) => {
+      const rowIndex = prevData.findIndex((row) => row.id === values.id)
+      if (rowIndex >= 0) {
+        const updatedData = [
+          ...prevData.slice(0, rowIndex),
+          ...values,
+          ...prevData.slice(rowIndex + 1)
+        ]
+        form.resetFields()
+        return updatedData
+      }
+      return prevData
+
+    })
+  }
+
   const handleAddCancel = () => {
     form.resetFields()
     setIsAddModalOpen(false)
+  }
+
+
+  const openUpdateModal = (record)=>{
+    setIsUpdateModalOpen(true)
+
+    form.setFieldsValue({
+      id:record.id,
+      timeStamp:moment(record.timeStamp),
+      title:record.title,
+      description:record.description,
+      dueDate:()=>{
+        const date = record.dueDate && record.dueDate !== '-'? moment(record.dueDate): undefined
+        return date
+      },
+      tags:record.tags,
+      status:record.status
+
+    })
+
   }
 
   const validateDueDate = (rule, value) => {
@@ -302,32 +355,11 @@ export default function ProTableComp() {
     return Promise.resolve()
   }
 
-  const handleDelete = (id)=>{
-    setData((prevData)=>(
-      prevData.filter((item)=>item.id !== id)
+  const handleDelete = (id) => {
+    setData((prevData) => (
+      prevData.filter((item) => item.id !== id)
     ))
   }
-
-  // const renderTagOption = (options) => {
-  //   if (!Array.isArray(options)) {
-  //     return '-'
-  //   }
-  //   if (options.length === 0) {
-  //     return '-'
-  //   }
-
-  //   return <>
-  //     {options.map((option) => {
-  //       <div
-  //         key={option.value}
-  //         style={{ color: option.color }}
-  //       >
-  //         {option.label}
-  //       </div>
-  //     })}
-  //   </>
-  // }
-
 
 
 
@@ -340,6 +372,7 @@ export default function ProTableComp() {
           width: "100%"
         }}
         className='proTable'
+        rowKey="id"
         columns={columns}
         dataSource={data}
         pagination={{ pageSize: 6 }}
@@ -347,12 +380,50 @@ export default function ProTableComp() {
         toolBarRender={() => <ToolBarComp setIsAddModalOpen={setIsAddModalOpen} />}
       />
 
+
+      {/* Modal to Handle Add task  */}
       <Modal
         title="Add Task"
         open={isAddModalOpen}
         onOk={() => handleAddSubmit(form.getFieldsValue())}
         onCancel={handleAddCancel}
         okText="Submit"
+      >
+        <Form form={form} onFinish={handleAddSubmit} initialValues={{ status: 'OPEN' }}>
+          <Form.Item name="id" initialValue={Date.now().toString(36) + Math.random().toString(36).substring(2, 7)} hidden />
+          <Form.Item name="timestamp" initialValue={moment()} hidden />
+          <Form.Item name="title" label="Title" rules={[{ required: true, max: 100 }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="description" label="Description" rules={[{ required: true, max: 100 }]}>
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item name="dueDate" label="Due Date" rules={[{ required: false }, { validator: validateDueDate }]}>
+            <DatePicker />
+          </Form.Item>
+          <Form.Item name="tags" label="Tags">
+            <Select mode="multiple" options={tagOptions} />
+          </Form.Item>
+          <Form.Item name="status" label="Status" rules={[{ required: true }]}>
+            <Select>
+              <Select.Option value="OPEN">Open</Select.Option>
+              <Select.Option value="WORKING">Working</Select.Option>
+              <Select.Option value="DONE">Done</Select.Option>
+              <Select.Option value="OVERDUE">OVerdue</Select.Option>
+
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+
+      {/* Modal To Handle Update Task */}
+      <Modal
+        title="Update Task"
+        open={isUpdateModalOpen}
+        onOk={() => handleUpdateSubmit(form.getFieldsValue())}
+        onCancel={()=>{setIsUpdateModalOpen(false);form.resetFields()}}
+        okText="Update"
       >
         <Form form={form} onFinish={handleAddSubmit} initialValues={{ status: 'OPEN' }}>
           <Form.Item name="timestamp" initialValue={moment()} hidden />
@@ -379,6 +450,7 @@ export default function ProTableComp() {
           </Form.Item>
         </Form>
       </Modal>
+
     </ConfigProvider>
   );
 }
