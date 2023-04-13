@@ -2,8 +2,8 @@ import React from 'react'
 import Sider from 'antd/es/layout/Sider'
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { useState } from 'react';
-import { FileOutlined, PieChartOutlined, UserOutlined, TeamOutlined, DesktopOutlined } from '@ant-design/icons';
-
+import {HomeOutlined , CalendarOutlined} from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 
 
@@ -21,18 +21,6 @@ const Sidebar = () => {
     };
   }
 
-  const SideItems = [
-    getItem('Home', 'home', <PieChartOutlined />),
-    getItem('Option 2', '2', <DesktopOutlined />),
-    // getItem('User', 'sub1', <UserOutlined />, [
-    //   getItem('Tom', '3'),
-    //   getItem('Bill', '4'),
-    //   getItem('Alex', '5'),
-    // ]),
-    // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-    // getItem('Files', '9', <FileOutlined />),
-  ]
-
   const siderStyle = {
     height: "100vh",
     // backgroundColor: "white",
@@ -40,16 +28,23 @@ const Sidebar = () => {
   };
 
   return (
-    <Sider 
-    collapsed={collapsed}
-    onCollapse={(value) => setCollapsed(value)}
-    breakpoint='md' 
-    collapsedWidth={0} 
-    style={siderStyle}
+    <Sider
+      collapsed={collapsed}
+      onCollapse={(value) => setCollapsed(value)}
+      breakpoint='md'
+      collapsedWidth={0}
+      style={siderStyle}
     >
-    
 
-        <Menu theme='dark' defaultSelectedKeys={['home']} mode='inline' items={SideItems}/>
+
+      <Menu theme='dark' defaultSelectedKeys={['home']} mode='inline' >
+        <Menu.Item key="home"  icon={<HomeOutlined />}>
+          <Link to="/home">Home</Link>
+        </Menu.Item>
+        <Menu.Item key="cal" icon={<CalendarOutlined />}>
+          <Link to="/cal">Calendar</Link>
+        </Menu.Item>
+      </Menu>
     </Sider>
   )
 }

@@ -6,7 +6,11 @@ import LOGO from "./Logo.png"
 import { useNavigate } from 'react-router-dom'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import ProTableComp from '../../components/TableComp/ProTaleComp'
-import {motion} from 'framer-motion'
+import { Routes, Route, useLocation } from 'react-router-dom';
+import CalendarComp from '../../components/Calendar/CalendarComp'
+
+import { motion } from 'framer-motion'
+import Landing from '../Landing/Landing'
 const { Header, Footer, Sider, Content } = Layout
 
 
@@ -14,6 +18,7 @@ const { Header, Footer, Sider, Content } = Layout
 const HomePage = () => {
 
   const navigate = useNavigate()
+  const location = useLocation()
   const headerStyle = {
     height: 54,
     paddingInline: 50,
@@ -35,18 +40,14 @@ const HomePage = () => {
 
 
 
-    <motion.Layout
-    initial={{ opacity: 0, x: -200 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.3 }}
-    >
+    <Layout >
 
 
 
       <Header style={headerStyle} className='header'>
 
         <div className="headerLeft"  >
-          <img src={LOGO} alt="Application Logo" onClick={()=>navigate("/")} style={{cursor:"pointer"}}/>
+          <img src={LOGO} alt="Application Logo" onClick={() => navigate("/")} style={{ cursor: "pointer" }} />
         </div>
 
         <div className="headerRight">
@@ -61,18 +62,22 @@ const HomePage = () => {
 
       <Layout>
 
-        <Sidebar/>
+        <Sidebar />
 
 
         <Content style={contentStyle}>
-
-          <ProTableComp />
+          {location.pathname ==="/home" ? (
+              <ProTableComp />
+          ):(
+            <CalendarComp />
+          )}
+          
 
         </Content>
 
       </Layout>
 
-    </motion.Layout>
+    </Layout>
   )
 }
 
