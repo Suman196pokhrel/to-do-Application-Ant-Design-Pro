@@ -209,7 +209,7 @@ export default function ProTableComp() {
       dataIndex: 'title',
       key: 'title',
       sorter: (a, b) => a.title.localeCompare(b.title),
-      render: (text) => <a>{text}</a>,
+      render: (text) => <a href=''>{text}</a>,
     },
     {
       title: 'Description',
