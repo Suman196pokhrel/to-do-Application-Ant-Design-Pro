@@ -1,7 +1,7 @@
 import React from 'react'
 import "../TableComp/ToolBarComp.css"
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { ConfigProvider, Tag, Button, Input } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Input } from 'antd';
 import { motion } from 'framer-motion'
 
 

@@ -9,8 +9,7 @@ import ProTableComp from '../../components/TableComp/ProTaleComp'
 import { useLocation } from 'react-router-dom';
 import CalendarComp from '../../components/Calendar/CalendarComp'
 
-// eslint-disable-next-line
-const { Header, Footer, Sider, Content } = Layout
+const { Header,  Content } = Layout
 
 
 
