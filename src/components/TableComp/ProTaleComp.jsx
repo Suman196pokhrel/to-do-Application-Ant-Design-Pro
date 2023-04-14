@@ -358,7 +358,7 @@ export default function ProTableComp() {
   const handleAddSubmit = (values) => {
 
     const date = () => {
-      if (_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined) {
+      if (_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() === undefined) {
         return null
       }
       else {
