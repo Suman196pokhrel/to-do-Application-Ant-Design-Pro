@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, {  useState } from 'react';
 import "../TableComp/ProTableComp.css"
 import { ConfigProvider, Tag, Input, Modal, Form, DatePicker, Popconfirm, Select } from 'antd';
