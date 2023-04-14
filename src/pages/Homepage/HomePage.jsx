@@ -1,16 +1,14 @@
 import React from 'react'
 import "../Homepage/HomePage.css"
-import { Button, Input, Layout, Space, Typography, Row, Col, Divider } from 'antd'
-import { PlusOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons"
+import { Button, Layout, Typography } from 'antd'
+import {  UserOutlined } from "@ant-design/icons"
 import LOGO from "./Logo.png"
 import { useNavigate } from 'react-router-dom'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import ProTableComp from '../../components/TableComp/ProTaleComp'
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import CalendarComp from '../../components/Calendar/CalendarComp'
 
-import { motion } from 'framer-motion'
-import Landing from '../Landing/Landing'
 const { Header, Footer, Sider, Content } = Layout
 
 

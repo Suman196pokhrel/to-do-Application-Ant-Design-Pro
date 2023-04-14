@@ -3,8 +3,7 @@ import {Routes, Route, useLocation} from 'react-router-dom';
 import Landing from "./pages/Landing/Landing"
 import HomePage from "./pages/Homepage/HomePage"
 import "./pages/Landing/Landing.css"
-import { AnimatePresence } from 'framer-motion';
-import CalendarComp from './components/Calendar/CalendarComp';
+
 
 
 

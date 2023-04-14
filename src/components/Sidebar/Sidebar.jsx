@@ -1,6 +1,6 @@
 import React from 'react'
 import Sider from 'antd/es/layout/Sider'
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import {Menu} from 'antd';
 import { useState } from 'react';
 import {HomeOutlined , CalendarOutlined} from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -10,16 +10,6 @@ import { Link } from 'react-router-dom';
 const Sidebar = () => {
 
   const [collapsed, setCollapsed] = useState(false)
-
-
-  function getItem(label, key, icon, children) {
-    return {
-      key,
-      icon,
-      children,
-      label,
-    };
-  }
 
   const siderStyle = {
     height: "100vh",

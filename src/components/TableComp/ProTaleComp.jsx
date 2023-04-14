@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, {  useState } from 'react';
 import "../TableComp/ProTableComp.css"
 import { ConfigProvider, Tag, Input, Modal, Form, DatePicker, Popconfirm, Select } from 'antd';
 import enUS from 'antd/es/locale/en_US';
@@ -197,7 +197,6 @@ export default function ProTableComp() {
       valueType: 'dateTime',
       render: (text, record) => moment(record.timeStamp).format('YYYY-MM-DD HH:mm:ss'),
       sorter: (a, b) => {
-        console.log("Sorter Executed ", a.timeStamp, b.timeStamp)
         const aTime = moment(a.timeStamp).unix();
         const bTime = moment(b.timeStamp).unix();
         return (aTime - bTime)
@@ -344,7 +343,6 @@ export default function ProTableComp() {
       description: record.description,
       dueDate: () => {
         const date = record.dueDate && record.dueDate !== '-' ? moment(record.dueDate) : undefined
-        console.log(date)
         return date
       },
       tags: record.tags,
@@ -370,7 +368,6 @@ export default function ProTableComp() {
 
     form.validateFields()
       .then((validatedValues) => {
-        console.log("Form values ", validatedValues['dueDate'])
         const newData = {
           id: uuidv4().toString(),
           ...values,
@@ -379,14 +376,6 @@ export default function ProTableComp() {
 
         }
         setData([newData, ...data])
-        console.log("Form Data While Adding Task ,", {
-          // id: Date.now().toString(36) + Math.random().toString(36).substring(2, 7),
-          id: uuidv4().toString(),
-          ...values,
-          dueDate: date(),
-          timeStamp: moment().valueOf()
-
-        })
         form.resetFields()
         setIsAddModalOpen(false)
       })
@@ -398,7 +387,7 @@ export default function ProTableComp() {
   const handleUpdateSubmit = () => {
     let values = form.getFieldsValue()
     const date = () => {
-      if (_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() == undefined) {
+      if (_.isEmpty(form.getFieldValue("dueDate")) || form.getFieldValue('dueDate').valueOf() === undefined) {
         return null
       }
       else {
