@@ -1,3 +1,6 @@
+// Following is an Additional Component which was added to populate the Sidebar .
+// For now it serves no purpose except showing my skill to integrate inbuilt components to the Layout component of Ant Design  
+
 import { Calendar} from 'antd'
 import React from 'react'
 import "../Calendar/CalendarComp.css"

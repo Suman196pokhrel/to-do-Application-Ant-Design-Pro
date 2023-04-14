@@ -466,7 +466,6 @@ export default function ProTableComp() {
           className='proTable'
           rowKey={(record) => record.id}
           columns={columns}
-          // dataSource={data}
           options={{ fullScreen: true, setting: true }}
           headerTitle="Task Table"
           pagination={{ pageSize: 6, showQuickJumper: true, responsive: true }}
