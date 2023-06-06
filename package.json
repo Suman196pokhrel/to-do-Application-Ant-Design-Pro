@@ -1,6 +1,6 @@
 {
   "name": "todo-ant-pro",
-  "homepage": "https://Suman196pokhrel.github.io/to-do-Application-Ant-Design-Pro",
+  "homepage": "https://Suman196pokhrel.github.io/to-do-Application-Ant-Design-Pro/",
   "version": "0.1.0",
   "private": true,
   "resolutions": {
@@ -34,9 +34,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "start": "react-scripts start",
     "predeploy":"npm run build",
     "deploy":"gh-pages -d build",
-    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
